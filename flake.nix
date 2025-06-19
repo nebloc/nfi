@@ -19,24 +19,7 @@
     devShells.${system}.default = pkgs.mkShell {
       buildInputs = [
         pkgs.go
-        pkgs.git
-        pkgs.curl
-        pkgs.bash
-        pkgs.python3
-        pkgs.python3Packages.virtualenv
       ];
-
-      shellHook = ''
-        echo "🐍 Welcome to the Python dev shell!"
-
-        # Optional: Automatically create venv in ./venv
-        if [ ! -d venv ]; then
-          echo "🔧 Creating virtual environment in ./venv"
-          python3 -m venv venv
-        fi
-        source ./venv/bin/activate
-        echo "✅ Virtualenv activated"
-      '';
     };
   };
 }

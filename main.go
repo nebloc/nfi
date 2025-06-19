@@ -17,14 +17,23 @@ type NixFlake struct {
 	Language    string
 }
 
+const help_message = `Usage: %s <name> <language> [-p packages] [-d description]
+
+Hints
+	- You can add packages for python either by python3Packages.<package> or by pip install to virtualenv
+	- Description needs to be wrapped in quotes
+
+`
+
 func main() {
+
 	if len(os.Args) < 3 {
-		fmt.Fprintf(os.Stderr, "Usage: %s <name> <language> [-p packages] [-d description]\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, help_message, os.Args[0])
 		os.Exit(1)
 	}
 
 	name := os.Args[1]
-	language := os.Args[2]
+	language := strings.ToLower(os.Args[2])
 
 	fs := flag.NewFlagSet(os.Args[0], flag.ExitOnError)
 	packages := fs.String("p", "", "Comma-separated list of packages")
@@ -41,6 +50,7 @@ func main() {
 	if *packages != "" {
 		packageList = strings.Split(*packages, ",")
 	}
+
 	packageList = append(packageList, languagePkgs[language]...)
 
 	if *description == "" {
@@ -136,6 +146,13 @@ const nix_template = `
       inherit system;
     };
   in {
+    #### Sample for building a package ####
+    # packages.${system}.default = pkgs.buildGoModule {
+    #   name = "{{.Name}}";
+    #   src = ./.;
+    #   vendorHash = null;
+    # };
+
     devShells.${system}.default = pkgs.mkShell {
       buildInputs = with pkgs; [{{range .Pkgs}}
 	{{.}}{{end}}
