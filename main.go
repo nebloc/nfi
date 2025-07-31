@@ -114,12 +114,12 @@ func shellHook(language string) (result string) {
 const python_shell_hook = `
         echo "🐍 Welcome to the {{.Name}} dev shell!"
 
-        # Optional: Automatically create venv in ./venv
-        if [ ! -d venv ]; then
-          echo "🔧 Creating virtual environment in ./venv"
-          python3 -m venv venv
+        # Optional: Automatically create venv in ./.venv
+        if [ ! -d .venv ]; then
+          echo "🔧 Creating virtual environment in ./.venv"
+          python3 -m venv .venv
         fi
-        source ./venv/bin/activate
+        source ./.venv/bin/activate
         echo "✅ Virtualenv activated"
 `
 
